@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universo CDT — 34 Casos · Reforma Fiscal MLM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue:    #3483FA;
+    --text:    #1A1A1A;
+    --sub:     #6B7280;
+    --border:  #E5E7EB;
+    --border2: #D1D5DB;
+    --bg:      #FFFFFF;
+    --bg-alt:  #F9FAFB;
+    --green:   #16A34A;
+    --green-bg:#F0FDF4;
+    --green-bd:#BBF7D0;
+    --red:     #DC2626;
+    --red-bg:  #FEF2F2;
+    --red-bd:  #FECACA;
+    --amber:   #D97706;
+    --orange:  #EA580C;
+  }
+  body { font-family: 'Segoe UI', -apple-system, Arial, sans-serif; background: var(--bg); color: var(--text); padding: 44px 64px; font-size: 13px; }
+
+  /* HEADER */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 2px solid var(--text); }
+  .header-left h1 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; margin-bottom: 4px; }
+  .header-left p  { font-size: 12px; color: var(--sub); }
+  .header-right   { display: flex; gap: 12px; }
+  .kpi { background: var(--bg-alt); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 20px; text-align: center; min-width: 80px; }
+  .kpi .kpi-num   { font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+  .kpi .kpi-label { font-size: 10px; color: var(--sub); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
+  .kpi.total .kpi-num { color: var(--text); }
+  .kpi.green .kpi-num { color: var(--green); }
+  .kpi.red   .kpi-num { color: var(--red); }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 12px 18px; border-radius: 8px; margin-bottom: 10px;
+    border-left: 4px solid transparent;
+  }
+  .section-header.green { background: var(--green-bg); border-left-color: var(--green); }
+  .section-header.red   { background: var(--red-bg);   border-left-color: var(--red); }
+  .section-num  { font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+  .section-header.green .section-num { color: var(--green); }
+  .section-header.red   .section-num { color: var(--red); }
+  .section-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .section-desc  { font-size: 11.5px; color: var(--sub); margin-top: 3px; }
+
+  /* TABLA */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 32px; }
+  thead th {
+    background: var(--bg-alt); color: var(--sub); padding: 8px 11px;
+    text-align: left; font-weight: 600; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.9px;
+    border-top: 1px solid var(--border2); border-bottom: 1px solid var(--border2);
+    white-space: nowrap;
+  }
+  tbody td { padding: 8px 11px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--bg-alt); }
+
+  /* ROW ACCENT */
+  .row-green td:first-child { border-left: 3px solid var(--green); padding-left: 9px; }
+  .row-warn  td:first-child { border-left: 3px solid var(--red);   padding-left: 9px; }
+
+  .num  { color: var(--sub); font-size: 11px; font-weight: 500; }
+  .name { font-weight: 600; color: var(--text); }
+  .id   { font-size: 11px; color: var(--sub); font-family: 'Courier New', monospace; }
+  .arrow { color: var(--border2); font-size: 14px; text-align: center; font-weight: 700; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; white-space: nowrap; letter-spacing: 0.2px; }
+  .badge-pj      { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+  .badge-pf      { background: #FFF7ED; color: #C2410C; border: 1px solid #FED7AA; }
+  .badge-ifpe    { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; }
+  .badge-noreg   { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+  .badge-std     { background: #F9FAFB; color: #6B7280; border: 1px solid #E5E7EB; }
+  .badge-unknown { background: #FEF2F2; color: #9CA3AF; border: 1px solid #FECACA; }
+
+  .warn-reason { display: inline-block; font-size: 10.5px; color: var(--red); font-weight: 700; background: var(--red-bg); border: 1px solid var(--red-bd); padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+  .nmv-up { color: var(--green); font-weight: 700; }
+
+  /* LEYENDA */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--sub); }
+
+  /* FOOTER */
+  .footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border2); display: flex; justify-content: space-between; font-size: 11px; color: var(--sub); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>Clasificación Regulatoria — CDT Reforma Fiscal MLM</h1>
+    <p>Sellers estratégicos que cambiaron razón social por reforma fiscal · Fuente: LK_KYC_VAULT_USER + BT_REG_REGULATION_MARKS_STATES · Marzo 2026</p>
+  </div>
+  <div class="header-right">
+    <div class="kpi total"><div class="kpi-num">34</div><div class="kpi-label">Casos totales</div></div>
+    <div class="kpi green"><div class="kpi-num">27</div><div class="kpi-label">Flujo estándar</div></div>
+    <div class="kpi red">  <div class="kpi-num">7</div> <div class="kpi-label">Revisión individual</div></div>
+  </div>
+</div>
+
+<!-- LEYENDA -->
+<div class="legend">
+  <div class="legend-item"><span class="badge badge-pj">PJ</span> Persona Jurídica</div>
+  <div class="legend-item"><span class="badge badge-pf">PF</span> Persona Física</div>
+  <div class="legend-item"><span class="badge badge-ifpe">IFPE</span> Regulado IFPE</div>
+  <div class="legend-item"><span class="badge badge-std">ESTÁNDAR</span> Regulado estándar (no IFPE)</div>
+  <div class="legend-item"><span class="badge badge-noreg">NO REG.</span> No regulado</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- GRUPO 1: 27 SIN BLOQUEANTE -->
+<!-- ============================================================ -->
+<div class="section-header green">
+  <div class="section-num">27</div>
+  <div>
+    <div class="section-title">Flujo estándar — avanzan sujeto a Convenio de Cesión</div>
+    <div class="section-desc">PJ → PJ · Ambas cuentas con regulación IFPE activa · Requieren: validación KYC cuenta nueva + firma de Convenio de Cesión tripartita (cedente · cesionaria · MeLi)</div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th><th>Vertical</th>
+      <th>Cust ID Viejo</th><th>Razón Social Vieja</th><th>Tipo · Reg.</th>
+      <th class="arrow"></th>
+      <th>Cust ID Nuevo</th><th>Razón Social Nueva</th><th>Tipo · Reg.</th>
+      <th>NMV 26</th><th>YoY</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="row-green">
+      <td class="num">1</td><td>C&amp;I</td>
+      <td class="id">1458501615</td><td class="name">CUORY</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2547092233</td><td class="name">HAZ COMERCIALIZACIONES</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>227,2M</td><td>-10,23%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">2</td><td>F&amp;H</td>
+      <td class="id">1458501615</td><td class="name">CUORY</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2547092233</td><td class="name">CORMORAN</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>—</td><td>—</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">3</td><td>F&amp;H</td>
+      <td class="id">149447734</td><td class="name">RAGA NET</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2640697179</td><td class="name">JANSEK</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>152,2M</td><td>-10,65%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">4</td><td>Technology</td>
+      <td class="id">1895435001</td><td class="name">TEKTEK</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2706404087</td><td class="name">VICERTA</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>71,1M</td><td>-51,62%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">5</td><td>Technology</td>
+      <td class="id">616274858</td><td class="name">AG-WEBS</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3129505507</td><td class="name">AGWEB</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>13,4M</td><td>-87,19%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">6</td><td>Sports &amp; Health</td>
+      <td class="id">331551040</td><td class="name">CHUTAMAX</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2501535376</td><td class="name">CHUTAMAXNUTRITION</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>25,8M</td><td>-70,42%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">7</td><td>Sports &amp; Health</td>
+      <td class="id">681056700</td><td class="name">MUSCLEMAX PLUS</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3119751900</td><td class="name">NUTRICIÓN YOBEP</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>1,8M</td><td>-97,77%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">8</td><td>Technology</td>
+      <td class="id">403671140</td><td class="name">KANINO MX</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2279568012</td><td class="name">SAGOK</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>25,5M</td><td>-36,09%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">9</td><td>Technology</td>
+      <td class="id">306291493</td><td class="name">MX WH</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2609471621</td><td class="name">WH MX</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>25,7M</td><td>-20,95%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">10</td><td>Technology</td>
+      <td class="id">454824305</td><td class="name">YAPANIZCEL</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3124360792</td><td class="name">KOMERLINE</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>0,3M</td><td>-98,76%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">11</td><td>Sports &amp; Health</td>
+      <td class="id">423438039</td><td class="name">COMERCIALIZADORAMEDICA 360</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2418076392</td><td class="name">S360</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>20,2M</td><td>-13,23%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">12</td><td>Technology</td>
+      <td class="id">414112680</td><td class="name">VIRTUALDEMAND.COM.MX</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">346628663</td><td class="name">TECHMAKRO</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>2,4M</td><td>-89,39%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">13</td><td>F&amp;H</td>
+      <td class="id">1293658614</td><td class="name">DRAGOARTDRAGOART</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3061640975</td><td class="name">LI20251212183139</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>0,0M</td><td>-100%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">14</td><td>Technology</td>
+      <td class="id">715841827</td><td class="name">ALMACENESSANTACLARA</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3124013335</td><td class="name">COMERCIALIZADORASANTACLARA</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>0,8M</td><td>-94,39%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">15</td><td>F&amp;H</td>
+      <td class="id">520589167</td><td class="name">FABATO</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2533956754</td><td class="name">REACORP</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>29,2M</td><td>—</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">16</td><td>Sports &amp; Health</td>
+      <td class="id">482927430</td><td class="name">RBMNUTRITION</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">1457720533</td><td class="name">HHEALTHBOOST56826</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>6,1M</td><td>-3,98%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">17</td><td>F&amp;H</td>
+      <td class="id">532278155</td><td class="name">INNGROUP.COM.MX</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">1119440314</td><td class="name">INNHOME SEATING</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>1,4M</td><td>-68,80%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">18</td><td>VP&amp;A</td>
+      <td class="id">543191622</td><td class="name">ABARROTE APHELIOS</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2967240697</td><td class="name">COMPONENTES_AFR</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>1,9M</td><td>-53,83%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">19</td><td>VP&amp;A</td>
+      <td class="id">1336913922</td><td class="name">OPENSTORECDMX</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2187401434</td><td class="name">MOTOFLY</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>1,6M</td><td>-54,99%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">20</td><td>VP&amp;A</td>
+      <td class="id">12928039</td><td class="name">MOTOADVENTURE_STORE</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2623241972</td><td class="name">HAZELINE_IMPORTS</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>1,4M</td><td>-36,70%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">21</td><td>F&amp;H</td>
+      <td class="id">1224452278</td><td class="name">ADMINISTRADORA DART</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3231430335</td><td class="name">TUPPERWARE OP</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>0,0M</td><td>-100%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">22</td><td>Technology</td>
+      <td class="id">1895435001</td><td class="name">TEKTEK</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2667675364</td><td class="name">ROVINARE</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>34,2M</td><td>—</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">23</td><td>Fashion</td>
+      <td class="id">1254068152</td><td class="name">FOREVER21MEXICOSRLDECV</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">1249225078</td><td class="name">ENFOQUERETAILSADECV</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>0,5M</td><td>+3,99%</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">24</td><td>Fashion</td>
+      <td class="id">454824305</td><td class="name">YAPANIZCEL</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3124360792</td><td class="name">GETAC</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>—</td><td>—</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">25</td><td>Fashion</td>
+      <td class="id">2325634710</td><td class="name">SIGETU</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3133259808</td><td class="name">AM7</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>2,1M</td><td>—</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">26</td><td>Fashion</td>
+      <td class="id">2322195205</td><td class="name">PROYEL</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3154423243</td><td class="name">GYKM</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>1,7M</td><td>—</td>
+    </tr>
+    <tr class="row-green">
+      <td class="num">27</td><td>Beauty</td>
+      <td class="id">415138514</td><td class="name">FOREO MEXICOSADECV</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2640269543</td><td class="name">FAQLATAM</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>0,7M</td><td>-46,80%</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<!-- GRUPO 2: 7 CON OBSERVACIÓN -->
+<!-- ============================================================ -->
+<div class="section-header red">
+  <div class="section-num">7</div>
+  <div>
+    <div class="section-title">Revisión individual — no aplica flujo estándar</div>
+    <div class="section-desc">Cada caso tiene un bloqueante específico que impide el proceso CDT estándar · Requieren alineación individual con AML y Legal Fintech antes de proceder</div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th><th>Vertical</th>
+      <th>Cust ID Viejo</th><th>Razón Social Vieja</th><th>Tipo · Reg.</th>
+      <th class="arrow"></th>
+      <th>Cust ID Nuevo</th><th>Razón Social Nueva</th><th>Tipo · Reg.</th>
+      <th>NMV 26</th><th>YoY</th><th>Observación</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="row-warn">
+      <td class="num">1</td><td>F&amp;H</td>
+      <td class="id">502560970</td><td class="name">HAZ COMERCIALIZACIONES</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-noreg">NO REG.</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2640697179</td><td class="name">JANSEK</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>—</td><td>—</td>
+      <td><span class="warn-reason">Viejo sin contrato IFPE</span></td>
+    </tr>
+    <tr class="row-warn">
+      <td class="num">2</td><td>C&amp;I</td>
+      <td class="id">93577367</td><td class="name">GENESIS_COMPANY</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">159677658</td><td class="name">IMPERMEABILIZANTES MX</td><td><span class="badge badge-pf">PF</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="nmv-up">27,2M</td><td class="nmv-up">+82,82%</td>
+      <td><span class="warn-reason">PJ → PF</span></td>
+    </tr>
+    <tr class="row-warn">
+      <td class="num">3</td><td>VP&amp;A</td>
+      <td class="id">47138062</td><td class="name">SELLATODO</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">221871018</td><td class="name">COMPUBIKERSHIPERMEGARED</td><td><span class="badge badge-pf">PF</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>0,4M</td><td>-97,81%</td>
+      <td><span class="warn-reason">PJ → PF</span></td>
+    </tr>
+    <tr class="row-warn">
+      <td class="num">4</td><td>Technology</td>
+      <td class="id">1754818042</td><td class="name">MLMEXICOMAKERS</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3239025920</td><td class="name">MEXICOMAKERSML</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-std">ESTÁNDAR</span></td>
+      <td>0,1M</td><td>-98,73%</td>
+      <td><span class="warn-reason">Nuevo sin IFPE activo</span></td>
+    </tr>
+    <tr class="row-warn">
+      <td class="num">5</td><td>Sports &amp; Health</td>
+      <td class="id">1056253463</td><td class="name">SANORIMFARMACIA</td><td><span class="badge badge-pf">PF</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2187688954</td><td class="name">MARSELLA FARMACIA</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>1,1M</td><td>-80,01%</td>
+      <td><span class="warn-reason">PF → PJ</span></td>
+    </tr>
+    <tr class="row-warn">
+      <td class="num">6</td><td>CPG</td>
+      <td class="id">519319045</td><td class="name">CREATIVEFL</td><td><span class="badge badge-pf">PF</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">3100297347</td><td class="name">CREATIVEFOODLABS</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td>0,0M</td><td>-99,89%</td>
+      <td><span class="warn-reason">PF → PJ</span></td>
+    </tr>
+    <tr class="row-warn">
+      <td class="num">7</td><td>Sports &amp; Health</td>
+      <td class="id">211075728</td><td class="name">TotalMédic</td><td><span class="badge badge-pj">PJ</span> <span class="badge badge-ifpe">IFPE</span></td>
+      <td class="arrow">→</td>
+      <td class="id">2983213423</td><td class="name">TotalMédic</td><td><span class="badge badge-unknown">unknown</span> <span class="badge badge-noreg">NO REG.</span></td>
+      <td>0,0M</td><td>-100%</td>
+      <td><span class="warn-reason">KYC nuevo incompleto</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Ignacio Arias · Producto Regulaciones · MLM</span>
+  <span>Los 27 casos de flujo estándar avanzan condicionados a firma del Convenio de Cesión tripartita · Marzo 2026</span>
+</div>
+
+</body>
+</html>
